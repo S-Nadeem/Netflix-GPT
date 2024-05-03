@@ -1,11 +1,22 @@
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import React, { useState, useRef } from "react";
-import { Login_cover } from "../utils/Links";
+import { Login_cover, Profile_pic } from "../utils/Links";
 import { validate } from "../utils/Validation";
 import Header from "./Header";
+import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/store/Slices/userSlice";
 
 const Login = () => {
   const [onSignin, setonSignin] = useState(true);
   const [errorMessage, seterrorMessage] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const onSinginSignUpHandler = () => {
     setonSignin(!onSignin);
   };
@@ -15,13 +26,65 @@ const Login = () => {
   const fullname = useRef(null);
 
   const onSubmitHandler = () => {
-    const message = validate(
-      email.current.value,
-      password.current.value,
-      !onSignin && fullname.current.value
-    );
+    const message = validate(email.current.value, password.current.value);
 
     seterrorMessage(message);
+    if (message) return;
+
+    if (!onSignin) {
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+
+          updateProfile(user, {
+            displayName: fullname.current.value,
+            photoURL: Profile_pic,
+          })
+            .then(() => {
+              const { uid, email, displayName, photoURL } = auth.currentUser;
+              dispatch(
+                addUser({
+                  uid: uid,
+                  email: email,
+                  displayName: displayName,
+                  photoURL: photoURL,
+                })
+              );
+
+              navigate("/browse");
+            })
+            .catch((error) => {
+              seterrorMessage(error.message);
+            });
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          seterrorMessage(errorCode + "" + errorMessage);
+        });
+    } else {
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+          navigate("/browse");
+        })
+        .catch((error) => {
+          console.log("cls", error);
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          seterrorMessage(errorCode + "" + errorMessage);
+        });
+    }
   };
   return (
     <div>
