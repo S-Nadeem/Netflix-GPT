@@ -6,3 +6,12 @@ export const User_Profile =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZ3SFVmXoYNHl2D22fjIEAwMuEqrbDYiUUwsWi6-K0AEnh9QZzAhgaOayZ6hFG4Eh_1m4&usqp=CAU";
 export const Profile_pic =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF_j8kyN_hrPU5ztgMUsr-UAJpmY6YwbEousClpLppVg&s";
+
+export const API_OPTIONS = {
+  method: "GET",
+  headers: {
+    accept: "application/json",
+    Authorization:
+      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwMjMxODkwMDgwOWQwM2FkOTU5ZWM1YWU4NzBjZjgzZiIsInN1YiI6IjY2MzRkMzNiYzA0NDI5MDEyMzhmMGRiOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.PIfdRW9eiJA14qCTDbDFB9MHV8ZnmwQ0fF-v8LSvf3U",
+  },
+};

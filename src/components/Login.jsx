@@ -4,19 +4,19 @@ import {
   updateProfile,
 } from "firebase/auth";
 import React, { useState, useRef } from "react";
-import { Login_cover, Profile_pic } from "../utils/Links";
+import { Login_cover, Profile_pic } from "../utils/constants";
 import { validate } from "../utils/Validation";
 import Header from "./Header";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/store/Slices/userSlice";
 
 const Login = () => {
   const [onSignin, setonSignin] = useState(true);
   const [errorMessage, seterrorMessage] = useState(null);
-  const navigate = useNavigate();
+
   const dispatch = useDispatch();
+
   const onSinginSignUpHandler = () => {
     setonSignin(!onSignin);
   };
@@ -54,8 +54,6 @@ const Login = () => {
                   photoURL: photoURL,
                 })
               );
-
-              navigate("/browse");
             })
             .catch((error) => {
               seterrorMessage(error.message);
@@ -75,11 +73,8 @@ const Login = () => {
       )
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
-          navigate("/browse");
         })
         .catch((error) => {
-          console.log("cls", error);
           const errorCode = error.code;
           const errorMessage = error.message;
           seterrorMessage(errorCode + "" + errorMessage);
